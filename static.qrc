@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>../img/resgin.png</file>
+        <file>../img/return.png</file>
+        <file>../img/send.png</file>
+    </qresource>
+</RCC>
