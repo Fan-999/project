@@ -2,6 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMessageBox>
+#include "chartserver.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -25,5 +27,6 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+    ChartServer *m_chartServer;
 };
 #endif // MAINWINDOW_H
