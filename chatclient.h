@@ -12,12 +12,16 @@ public:
 signals:
     void connected();
     void messageRecevied(const QString &text);
+    void jsonReceived(const QJsonObject &docObj);
 private:
     QTcpSocket  *m_clientSocket;
 public:
     void onReadyRead();
     void sendMessage(const QString &text,const QString &type="message");
     void connectToServer(const QHostAddress &address,quint16 port);
+    // void jsonToReceived(const QJsonObject &docObj);
+    void disconnectFromHost();
+
 signals:
 };
 

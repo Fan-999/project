@@ -2,8 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QMessageBox>
-#include "chartserver.h"
+#include "chatclient.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,13 +19,20 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_startStopbutton_clicked();
+    void on_sendbutton_clicked();
 
-public slots:
-    void logMessage(const QString &msg);
+    void on_logoutbutton_clicked();
+
+    void on_loginbutton_clicked();
+    void connectedToServer();
+    void messageReceived(const QString &sender,const QString &text);
+    void jsonToReceived(const QJsonObject &docObj);
+    void userJoined(const QString &user);
+    void userLeft(const QString &user);
+    void userListReceived(const QStringList &list);
 
 private:
     Ui::MainWindow *ui;
-    ChartServer *m_chartServer;
+    ChatClient *m_chatClient;
 };
 #endif // MAINWINDOW_H

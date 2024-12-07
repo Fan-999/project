@@ -21,8 +21,15 @@ void ChatClient::onReadyRead()
         socketStream >> jsonData;
         //读取数据成功
         if(socketStream.commitTransaction()){
-            emit messageRecevied(QString::fromUtf8(jsonData));
-
+            // emit messageRecevied(QString::fromUtf8(jsonData));
+            QJsonParseError paseError;
+            const QJsonDocument jsonDoc=QJsonDocument::fromJson(jsonData,&paseError);
+            if(paseError.error==QJsonParseError::NoError){
+                if(jsonDoc.isObject()){
+                    // emit logMessage(QJsonDocument(jsonDoc).toJson(QJsonDocument::Compact));
+                    emit jsonReceived(jsonDoc.object());
+                }
+            }
         }else{
             break;
         }
@@ -48,4 +55,9 @@ void ChatClient::sendMessage(const QString &text, const QString &type)
 void ChatClient::connectToServer(const QHostAddress &address, quint16 port)
 {
     m_clientSocket->connectToHost(address,port);
+}
+//断开服务器
+void ChatClient::disconnectFromHost()
+{
+    m_clientSocket->disconnectFromHost();
 }

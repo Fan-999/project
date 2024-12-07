@@ -9,6 +9,7 @@ ServerWorker::ServerWorker(QObject *parent)
 {
     m_serverSocket=new QTcpSocket(this);
     connect(m_serverSocket,&QTcpSocket::readyRead,this,&ServerWorker::onReadyRead);
+    connect(m_serverSocket,&QTcpSocket::disconnected,this,&ServerWorker::disconnectedFromClient);
 }
 
 bool ServerWorker::setSocketDescriptor(qintptr socketDescriptor)
@@ -72,7 +73,7 @@ void ServerWorker::sendMessage(const QString &text, const QString &type)
 void ServerWorker::sendJson(const QJsonObject &json)
 {
     const QByteArray jsonData=QJsonDocument(json).toJson(QJsonDocument::Compact);
-    emit logMessseage(QLatin1String("Sending to")+userName()+QLatin1String("-")+QString::fromUtf8(jsonData));
+    emit logMessage(QLatin1String("Sending to ")+userName()+QLatin1String("-")+QString::fromUtf8(jsonData));
     QDataStream socketStream(m_serverSocket);
     socketStream.setVersion(QDataStream::Qt_5_7);
     socketStream << jsonData;
