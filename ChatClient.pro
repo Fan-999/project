@@ -1,5 +1,5 @@
 QT       += core gui network
-
+QT       += core gui sql
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -10,11 +10,13 @@ CONFIG += c++17
 
 SOURCES += \
     chatclient.cpp \
+    database.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     chatclient.h \
+    database.h \
     mainwindow.h
 
 FORMS += \
