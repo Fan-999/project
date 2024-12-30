@@ -18,6 +18,7 @@ private:
 public:
     void onReadyRead();
     void sendMessage(const QString &text,const QString &type="message");
+    void sendMessages(const QString &sender,const QString &receiver,const QString &text,const QString &type="message");
     void connectToServer(const QHostAddress &address,quint16 port);
     // void jsonToReceived(const QJsonObject &docObj);
     void disconnectFromHost();

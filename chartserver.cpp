@@ -82,6 +82,38 @@ void ChartServer::jsonReceived(ServerWorker *sender, const QJsonObject &docObj)
         userListMessage["userlist"]=userlist;
         sender->sendJson(userListMessage);
     }
+    // 如果type是移除命令
+    else if(typeVal.toString().compare("remove", Qt::CaseInsensitive) == 0) {
+        QString removedUsername = docObj.value("text").toString();
+        qDebug()<<removedUsername ;
+        // 广播移除消息给所有客户端，除了被移除的用户自己 并发送“removed”信号给客户端
+        QJsonObject removedMessage;
+        removedMessage["type"] = "removed";
+        removedMessage["username"] = removedUsername;
+        broadcast(removedMessage, sender);
+        emit logMessage(removedUsername + "已被移除");
+    }
+    // 如果type是私聊
+    else if (typeVal.toString().compare("private", Qt::CaseInsensitive) == 0) {
+        QString sender = docObj.value("sender").toString();
+        qDebug()<<sender;
+        QString receiver = docObj.value("receiver").toString();
+        QString text = docObj.value("text").toString();
+        // 查找接收者并发送私聊消息
+        for (ServerWorker *worker : m_clients) {
+            if (worker->userName() == receiver||worker->userName() == sender) {
+                qDebug()<<worker->userName() ;
+                QJsonObject privateMessage;
+                privateMessage["type"] = "privated";
+                privateMessage["sender"] = sender;
+                privateMessage["receiver"] = receiver;
+                privateMessage["text"] = text;
+                worker->sendJson(privateMessage);
+                // break;
+            }
+        }
+
+    }
 }
 //处理用户退出操作
 void ChartServer::userDisconnected(ServerWorker *sender)

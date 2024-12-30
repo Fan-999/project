@@ -51,6 +51,24 @@ void ChatClient::sendMessage(const QString &text, const QString &type)
         serverStream << QJsonDocument(message).toJson();
     }
 }
+//私聊信息函数
+void ChatClient::sendMessages(const QString &sender, const QString &receiver, const QString &text, const QString &type)
+{
+    if(m_clientSocket->state()!=QAbstractSocket::ConnectedState)
+        return;
+    if(!text.isEmpty()){
+        QDataStream serverStream(m_clientSocket);
+        serverStream.setVersion(QDataStream::Qt_5_12);
+        //创建想要发送的json
+        QJsonObject message;
+        message["type"]=type;
+        message["sender"]=sender;
+        message["receiver"]=receiver;
+        message["text"]=text;
+        //发送json数据
+        serverStream << QJsonDocument(message).toJson();
+    }
+}
 
 void ChatClient::connectToServer(const QHostAddress &address, quint16 port)
 {

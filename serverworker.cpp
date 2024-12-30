@@ -70,6 +70,24 @@ void ServerWorker::sendMessage(const QString &text, const QString &type)
     }
 }
 
+void ServerWorker::sendMessages(const QString &sender, const QString &receiver, const QString &text, const QString &type)
+{
+    if(m_serverSocket->state()!=QAbstractSocket::ConnectedState)
+        return;
+    if(!text.isEmpty()){
+        QDataStream serverStream(m_serverSocket);
+        serverStream.setVersion(QDataStream::Qt_5_12);
+        //创建想要发送的json
+        QJsonObject message;
+        message["type"]=type;
+        message["sender"]=sender;
+        message["receiver"]=receiver;
+        message["text"]=text;
+        //发送json数据
+        serverStream << QJsonDocument(message).toJson();
+    }
+}
+
 void ServerWorker::sendJson(const QJsonObject &json)
 {
     const QByteArray jsonData=QJsonDocument(json).toJson(QJsonDocument::Compact);
